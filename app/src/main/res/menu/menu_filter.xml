@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:title="Фильтры">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_radio_button1"
+                    android:title="Размер убыв." />
+                <item
+                    android:id="@+id/nav_radio_button2"
+                    android:title="Размер возр." />
+                <item
+                    android:id="@+id/nav_radio_button3"
+                    android:title="Дата убыв." />
+                <item
+                    android:id="@+id/nav_radio_button4"
+                    android:title="Дата возр." />
+            </group>
+        </menu>
+    </item>
+
+
+    <item android:title="Расширения">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/chb_txt"
+                    android:title=".txt" />
+                <item
+                    android:id="@+id/chb_png"
+                    android:title=".png" />
+                <item
+                    android:id="@+id/chb_pdf"
+                    android:title=".pdf" />
+                <item
+                    android:id="@+id/chb_mp3"
+                    android:title=".mp3" />
+            </group>
+        </menu>
+    </item>
+</menu>
