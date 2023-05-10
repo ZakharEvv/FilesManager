@@ -15,21 +15,20 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Collections
 
-@RequiresApi(Build.VERSION_CODES.O)
 class InternalViewModel(application: Application) : AndroidViewModel(application){
 
     private var filesList = ArrayList<FileItem>()
     val files = MutableLiveData<List<FileItem>>()
     private val rootPath = java.lang.StringBuilder()
     private var file : File
-    private var block : String
-    var sortType = ""
+    private var root : String
+    private var sortType = ""
 
     private var database: FilesDatabase
 
     init {
         rootPath.append(Environment.getExternalStorageDirectory().absolutePath)
-        block = rootPath.substring(0, rootPath.lastIndexOf("/"))
+        root = rootPath.substring(0, rootPath.lastIndexOf("/"))
         file = File(rootPath.toString())
         file.listFiles()?.let { updateList(it) }
         database = FilesDatabase.getInstance(application)
@@ -38,13 +37,12 @@ class InternalViewModel(application: Application) : AndroidViewModel(application
     //sets a start path for categories on the main screen
     fun setStartFrom(path : String){
         rootPath.append(path)
-        block = rootPath.substring(0, rootPath.lastIndexOf("/"))
+        root = rootPath.substring(0, rootPath.lastIndexOf("/"))
         file = File(rootPath.toString())
         file.listFiles()?.let { updateList(it) }
     }
 
     //method for onFileItem click. Goes into a path
-    @RequiresApi(Build.VERSION_CODES.O)
     fun goIntoPath(name : String){
         rootPath.append("/$name")
         file = File(rootPath.toString())
@@ -52,11 +50,10 @@ class InternalViewModel(application: Application) : AndroidViewModel(application
     }
 
     //goes back from the path
-    @RequiresApi(Build.VERSION_CODES.O)
     fun goBack() : Boolean{
         var isEnd = true
         val newPath = rootPath.substring(0, rootPath.lastIndexOf("/"))
-        if (!newPath.equals(block)) {
+        if (!newPath.equals(root)) {
             rootPath.clear()
             rootPath.append(newPath)
             file = File(rootPath.toString())
@@ -67,7 +64,6 @@ class InternalViewModel(application: Application) : AndroidViewModel(application
     }
 
     //refreshes files array for adapter
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun updateList(filesParam : Array<File>){
         filesList.clear()
         for(file in filesParam){

@@ -40,7 +40,6 @@ class MainFragment : Fragment() {
 
     private lateinit var viewModel : MainViewModel
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,7 +55,6 @@ class MainFragment : Fragment() {
         val adapter = FilesAdapter()
 
         adapter.setFiles(RecentFilesStore.getRecentFiles())
-        adapter.setFiles(arrayListOf(FileItem(0, "", "", 1f, 0, "", "")))
         recyclerView.visibility = View.GONE
         viewModel.recent.observe(
             viewLifecycleOwner,
@@ -87,38 +85,40 @@ class MainFragment : Fragment() {
             activity?.let { Navigation.findNavController(it, R.id.nav_host_fragment) }
 
         val onCategoryClick = View.OnClickListener {
-            var category = ""
-            when(it.id){
-                R.id.btnAllFiles -> category = ""
-                R.id.btnDownloads -> category = "/download"
-                R.id.btnPictures -> category = "/pictures"
-                R.id.btnMusic -> category = "/music"
-                R.id.btnMovies -> category = "/movies"
-            }
+            val category = defineCategory(it.id)
             navController?.navigate(R.id.action_mainFragment_to_fileFragment, bundleOf(Pair("category", category)))
         }
 
-        btnAllFiles.setOnClickListener(onCategoryClick)
-        btnDownloads.setOnClickListener(onCategoryClick)
-        btnPictures.setOnClickListener(onCategoryClick)
-        btnMusic.setOnClickListener(onCategoryClick)
-        btnMovies.setOnClickListener(onCategoryClick)
+        val buttonsList = listOf(btnAllFiles, btnDownloads, btnPictures, btnMusic, btnMovies)
+        buttonsList.forEach{it.setOnClickListener(onCategoryClick)}
 
         return view
+    }
+
+    //return a path for each category
+    private fun defineCategory(id: Int): String {
+        return when(id){
+            R.id.btnAllFiles -> ""
+            R.id.btnDownloads ->  "/download"
+            R.id.btnPictures ->  "/pictures"
+            R.id.btnMusic ->  "/music"
+            R.id.btnMovies ->  "/movies"
+            else -> {""}
+        }
     }
 
     //updates the progress bar of used space
     private fun updateProgressBar() {
         val params = progressBar.layoutParams
         val dp = Resources.getSystem().displayMetrics.xdpi.roundToInt()
-        val a = (Environment.getExternalStorageDirectory().freeSpace/1000000).toFloat()
-        val b = (Environment.getExternalStorageDirectory().totalSpace/1000000).toFloat()
-        params.width = ((dp*2)*(1-a/b)).toInt()
+        val freeSpace = (Environment.getExternalStorageDirectory().freeSpace/1000000).toFloat()
+        val totalSpace = (Environment.getExternalStorageDirectory().totalSpace/1000000).toFloat()
+        params.width = ((dp*2)*(1-freeSpace/totalSpace)).toInt()
         progressBar.layoutParams = params
     }
 
     //inits all screen views
-    fun initViews(view : View){
+    private fun initViews(view : View){
         btnAllFiles = view.findViewById(R.id.btnAllFiles)
         btnDownloads = view.findViewById(R.id.btnDownloads)
         btnPictures = view.findViewById(R.id.btnPictures)

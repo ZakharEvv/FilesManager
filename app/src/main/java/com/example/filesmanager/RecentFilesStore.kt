@@ -2,16 +2,16 @@ package com.example.filesmanager
 
 import com.example.filesmanager.model.FileItem
 
-class RecentFilesStore {
-    companion object{
-        private var files = ArrayList<FileItem>()
+object RecentFilesStore {
 
-        fun setRecentFiles(array : ArrayList<FileItem>){
-            files.addAll(array)
-        }
+    private var files = ArrayList<FileItem>()
 
-        fun getRecentFiles() : ArrayList<FileItem>{
-            return files
-        }
+    fun setRecentFiles(array : ArrayList<FileItem>){
+        files.addAll(array)
     }
+
+    fun getRecentFiles() : ArrayList<FileItem>{
+        return files
+    }
+
 }

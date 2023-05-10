@@ -16,7 +16,6 @@ class FileHelper {
 
     companion object{
         //receives a file param and converts it to an object of FileItem class
-        @RequiresApi(Build.VERSION_CODES.O)
         fun convertFileToFileItem(file: File) : FileItem {
             val paths = Paths.get(file.absolutePath)
             val attributes = Files.readAttributes(paths, BasicFileAttributes::class.java)
@@ -43,14 +42,14 @@ class FileHelper {
             var type = 0
             if(file.isFile) {
                 if(file.name.contains(".")) {
-                    val extension = file.name.substring(file.name.indexOf("."))
-                    if (extension.equals(".jpeg") or extension.equals(".jpg") or extension.equals(".png"))
+                    val extension = file.name.substring(file.name.lastIndexOf("."))
+                    if (extension in listOf(".jpeg", ".jpg", ".png"))
                         type = R.drawable.icon_image
-                    else if (extension.equals(".txt") or extension.equals(".doc") or extension.equals(".docx"))
+                    else if (extension in listOf(".txt", ".doc", ".docx"))
                         type = R.drawable.icon_doc
                     else if (extension.equals(".mp4"))
                         type = R.drawable.icon_video
-                    else if (extension.equals(".zip") or extension.equals(".rar"))
+                    else if (extension in listOf(".zip", ".rar"))
                         type = R.drawable.icon_zip
                     else if (extension.equals(".pdf"))
                         type = R.drawable.icon_pdf

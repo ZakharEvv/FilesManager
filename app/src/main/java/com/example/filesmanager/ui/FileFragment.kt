@@ -1,13 +1,9 @@
 package com.example.filesmanager.ui
 
-import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.widget.LinearLayout
-import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -34,7 +30,6 @@ class FileFragment : Fragment() {
     private lateinit var drawer: DrawerLayout
     private lateinit var navigationView: NavigationView
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,9 +38,7 @@ class FileFragment : Fragment() {
         val category = arguments?.getString("category")
         initViews(view)
         viewModel = ViewModelProvider(this).get(InternalViewModel::class.java)
-        if (category != null) {
-            viewModel.setStartFrom(category)
-        }
+        category?.let { viewModel.setStartFrom(it) }
 
         val navController =
             activity?.let { Navigation.findNavController(it, R.id.nav_host_fragment) }
@@ -86,35 +79,17 @@ class FileFragment : Fragment() {
             drawer.openDrawer(GravityCompat.END)
         }
 
-
         navigationView.setNavigationItemSelectedListener(object : NavigationView.OnNavigationItemSelectedListener{
             override fun onNavigationItemSelected(item: MenuItem): Boolean {
                 when(item.itemId){
-
-                    R.id.nav_radio_button1 -> {
-                        setBehavior(item, "sizeDescending")
-                    }
-                    R.id.nav_radio_button2 -> {
-                        setBehavior(item, "size")
-                    }
-                    R.id.nav_radio_button3 -> {
-                        setBehavior(item, "dateDescending")
-                    }
-                    R.id.nav_radio_button4 -> {
-                        setBehavior(item, "date")
-                    }
-                    R.id.chb_txt -> {
-                        setBehavior(item, ".txt")
-                    }
-                    R.id.chb_png -> {
-                        setBehavior(item, ".png")
-                    }
-                    R.id.chb_pdf -> {
-                        setBehavior(item, ".pdf")
-                    }
-                    R.id.chb_mp3 -> {
-                        setBehavior(item, ".mp3")
-                    }
+                    R.id.nav_radio_button1 -> setBehavior(item, "sizeDescending")
+                    R.id.nav_radio_button2 -> setBehavior(item, "size")
+                    R.id.nav_radio_button3 -> setBehavior(item, "dateDescending")
+                    R.id.nav_radio_button4 -> setBehavior(item, "date")
+                    R.id.chb_txt -> setBehavior(item, ".txt")
+                    R.id.chb_png -> setBehavior(item, ".png")
+                    R.id.chb_pdf -> setBehavior(item, ".pdf")
+                    R.id.chb_mp3 -> setBehavior(item, ".mp3")
                 }
                 return true
             }
@@ -123,16 +98,10 @@ class FileFragment : Fragment() {
     }
 
     //sets onClick logic for menu items
-    @RequiresApi(Build.VERSION_CODES.O)
     fun setBehavior(item : MenuItem, sortType : String){
-        if(item.isChecked) {
-            item.setChecked(false)
-            viewModel.setTypeSort("")
-        }
-        else {
-            item.setChecked(true)
-            viewModel.setTypeSort(sortType)
-        }
+        item.setChecked(!item.isChecked)
+        val newSortType = if (item.isChecked) sortType else ""
+        viewModel.setTypeSort(newSortType)
     }
 
     //inits all screen views

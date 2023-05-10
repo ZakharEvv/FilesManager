@@ -42,15 +42,12 @@ class FilesAdapter : RecyclerView.Adapter<FilesAdapter.FileViewHolder>() {
 
     //convert the file size in bytes to mB or gB
     fun getFileSize(size: Float) : String{
-        var newSize = ""
-        if(size < 1000)
-            newSize = "${size.toInt()} kB"
-        else if (size >=1000)
-            newSize = "${(size/1000).toInt()} mB"
+        return if(size < 1024)
+            "${size.toInt()} kB"
+        else if (size >=1024)
+            "${(size/1024).toInt()} mB"
         else
-            newSize = "${(size/1000000).toInt()} gB"
-
-        return newSize
+            "${(size/1024*1024).toInt()} gB"
     }
 
     fun setFiles(files : List<FileItem>){
